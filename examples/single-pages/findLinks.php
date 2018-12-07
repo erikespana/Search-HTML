@@ -4,7 +4,8 @@
 	
 	Finds all the hyperlinks in a file. File can be a URL.
 */
-
+// Configure PHP to use proxy server settings.
+include ("set_proxy_server.php");
 
 // Checks if script was passed a "file" parameter.
 if ( empty( $_GET["file"] ) ) {
