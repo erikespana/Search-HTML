@@ -1,7 +1,7 @@
 <?php
 
-include_once "siteHealth/htmlTags.php";
-include_once "siteHealth/htmlParser.php";
+include_once "scrape-web-pages/htmlTags.php";
+include_once "scrape-web-pages/htmlParser.php";
 
 // base class with member properties and methods
 class crawlPages {
@@ -14,12 +14,13 @@ class crawlPages {
 		//echo "Searching: " . $this->url;
 	}
 	
-	function loadFromTextfile($readFile) {
+	function loadFromTextfile($readFile, $domain) {
 		
 		$html = new htmlTags();
 		
 		// Open $readFile
 		$handle = @fopen($readFile, "r");
+		// echo "<p>readFile: " . $readFile . "</p>"; // debug
 		
 		if ($handle) {
 			//echo "<td>Open $readFile</td>";
@@ -29,9 +30,15 @@ class crawlPages {
 				$path = trim($buffer);
 				
 				// if the $URL wasn't blank
-				if ($path != "") {
+				if ( $path != "" ) {
+					$position = stripos($path, "http", 0);
 					
-					$url = "http://tdinet.tdi.texas.gov/" . $path . ".html";
+					// if path starts with http don't add anything
+					if ( $position == 0 )
+						$url = $path;
+					else
+						$url = $domain . $path . ".html";
+						
 					$this->urls[] = $url;
 				}				
 			}
