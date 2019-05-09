@@ -11,17 +11,20 @@ class htmlParser {
 	var $html;
 	// Regular expression to match links. Saves the link and linked text.
 	var $patternAHref = "/href=\"([^\"]*)\"[^>]*>(.*)<\/a>/Ui";
+	//var $patternAHref = "/<a([^>]*)>()<\/a>/Ui"; // find empty links
 	// File handle
 	var $urlHandle;
 	var $tag;
 
 	function __construct($url = "") {
 		set_time_limit(600);		// Limit the maximum execution time
+		ini_set ('user_agent', $_SERVER['HTTP_USER_AGENT']); 
 		$this->tag = new htmlTags();
 	}
 	
 	// Save contents of $file as a string, in class property: $this->html.
 	function getHTML($url) {
+		
 		
 		$this->html = "";
 		
@@ -30,13 +33,15 @@ class htmlParser {
 		
 		
 			// Open a url
+			echo "<!--" . $this->url . "-->\n";
 			$urlHandle = fopen($this->url, "r");
 			if (FALSE === $urlHandle)
-				echo "Failed to open stream to " . $this->tag->ahref($this->url);
-			else
+				echo $_SERVER['HTTP_USER_AGENT'] . "; Failed to open stream to " . $this->tag->ahref($this->url);
+			else {
 				// save the html to $html
 				$this->html = stream_get_contents($urlHandle);
-			fclose($urlHandle);
+				fclose($urlHandle);
+			}
 		}
 		
 	}
